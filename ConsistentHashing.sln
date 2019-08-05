@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsistentHashing", "ConsistentHashing\ConsistentHashing.csproj", "{308AC534-02A9-4E82-99F7-FCBE76BA86A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{8DA2AD79-9CBA-4D5C-8AAB-2616503F58C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{308AC534-02A9-4E82-99F7-FCBE76BA86A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{308AC534-02A9-4E82-99F7-FCBE76BA86A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{308AC534-02A9-4E82-99F7-FCBE76BA86A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{308AC534-02A9-4E82-99F7-FCBE76BA86A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DA2AD79-9CBA-4D5C-8AAB-2616503F58C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA2AD79-9CBA-4D5C-8AAB-2616503F58C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA2AD79-9CBA-4D5C-8AAB-2616503F58C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA2AD79-9CBA-4D5C-8AAB-2616503F58C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29235112-5662-46FC-A3DD-D96DDFA9AE37}
+	EndGlobalSection
+EndGlobal
