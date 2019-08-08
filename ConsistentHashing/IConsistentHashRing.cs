@@ -8,6 +8,8 @@ namespace ConsistentHashing
     {
         void AddNode(TNode node, IEnumerable<uint> virtualNodes);
 
+        void RemoveNode(TNode node);
+
         IEnumerable<(TNode, HashRange)> RangeAssignments { get; }
 
         TNode GetNode(uint hash);

@@ -22,8 +22,18 @@ namespace ConsistentHashing
             }
         }
 
+        public void RemoveNode(TNode node)
+        {
+            throw new NotImplementedException();
+        }
+
         public TNode GetNode(uint hash)
         {
+            if (this.root == null)
+            {
+                throw new InvalidOperationException("Hash ring is empty");
+            }
+
             TreeNode n = GetNode(this.root);
             return n == null ? GetMin(this.root).Node : n.Node;
 

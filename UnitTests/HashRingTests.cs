@@ -17,6 +17,28 @@ namespace UnitTests
         }
 
         [Fact]
+        public void GetNodeEmptyRing()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            Action action = () =>
+            {
+                hashRing.GetNode(10);
+            };
+
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void GetRangeAssignmentsEmptyRing()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            var assignments = hashRing.RangeAssignments.ToArray();
+            assignments.Should().HaveCount(0);
+        }
+
+        [Fact]
         public void GetRangeAssignments()
         {
             IConsistentHashRing<int> hashRing = new HashRing<int>();
