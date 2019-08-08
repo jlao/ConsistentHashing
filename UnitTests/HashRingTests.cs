@@ -17,9 +17,42 @@ namespace UnitTests
         }
 
         [Fact]
+        public void AddRemoveNodes()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            hashRing.AddNode(1, new uint[] { 10, 210, 310 });
+            hashRing.AddNode(2, new uint[] { 20, 220, 320 });
+            hashRing.AddNode(3, new uint[] { 30, 230, 330 });
+
+            hashRing.GetNode(15).Should().Be(2);
+            hashRing.GetNode(215).Should().Be(2);
+            hashRing.GetNode(315).Should().Be(2);
+
+            hashRing.RemoveNode(2);
+
+            hashRing.GetNode(15).Should().Be(3);
+
+            hashRing.GetNode(15).Should().Be(3);
+            hashRing.GetNode(215).Should().Be(3);
+            hashRing.GetNode(315).Should().Be(3);
+        }
+
+        [Fact]
+        public void RemoveNonexistentNode()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            hashRing.RemoveNode(1);
+
+            hashRing.IsEmpty.Should().BeTrue();
+        }
+
+        [Fact]
         public void GetNodeEmptyRing()
         {
             IConsistentHashRing<int> hashRing = new HashRing<int>();
+            hashRing.IsEmpty.Should().BeTrue();
 
             Action action = () =>
             {

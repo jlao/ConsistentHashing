@@ -6,11 +6,13 @@ namespace ConsistentHashing
 {
     public interface IConsistentHashRing<TNode>
     {
+        IEnumerable<(TNode, HashRange)> RangeAssignments { get; }
+
+        bool IsEmpty { get; }
+
         void AddNode(TNode node, IEnumerable<uint> virtualNodes);
 
         void RemoveNode(TNode node);
-
-        IEnumerable<(TNode, HashRange)> RangeAssignments { get; }
 
         TNode GetNode(uint hash);
     }

@@ -14,6 +14,8 @@ namespace ConsistentHashing
         public IEnumerable<(TNode, HashRange)> RangeAssignments =>
             EnumerateRangeAssignments(this.root);
 
+        public bool IsEmpty => this.root == null;
+
         public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
         {
             foreach (uint virtualNode in virtualNodes)
