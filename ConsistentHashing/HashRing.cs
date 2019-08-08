@@ -6,26 +6,13 @@ namespace ConsistentHashing
     public class HashRing<TNode> : IConsistentHashRing<TNode>
     {
         private TreeNode root;
-        private readonly uint numVirtualNodes;
-        private readonly Random rng;
 
-        public HashRing(uint numVirtualNodes)
+        public HashRing()
         {
-            this.numVirtualNodes = numVirtualNodes;
-            this.rng = new Random();
         }
 
         public IEnumerable<(TNode, HashRange)> RangeAssignments =>
             EnumerateRangeAssignments(this.root);
-
-        public void AddNode(TNode node)
-        {
-            for (uint i = 0; i < this.numVirtualNodes; i++)
-            {
-                var newNode = new TreeNode(node, (uint)this.rng.Next());
-                AddNode(ref this.root, newNode);
-            }
-        }
 
         public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
         {

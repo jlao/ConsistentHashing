@@ -19,7 +19,7 @@ namespace UnitTests
         [Fact]
         public void GetRangeAssignments()
         {
-            IConsistentHashRing<int> hashRing = new HashRing<int>(5);
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
 
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
@@ -38,7 +38,7 @@ namespace UnitTests
         [Fact]
         public void GetNodeForHash()
         {
-            IConsistentHashRing<int> hashRing = new HashRing<int>(5);
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
 
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
@@ -55,6 +55,20 @@ namespace UnitTests
             hashRing.GetNode(600).Should().Be(2);
             hashRing.GetNode(601).Should().Be(1);
             hashRing.GetNode(100).Should().Be(1);
+        }
+
+        [Fact]
+        public void VerifyAllHashesInRange()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            hashRing.AddNode(1, new uint[] { 100, 300, 500 });
+            hashRing.AddNode(2, new uint[] { 200, 400, 600 });
+
+            for (uint i = 301; i <= 400; i++)
+            {
+                hashRing.GetNode(i).Should().Be(2);
+            }
         }
 
         private static void AssertAssignment(

@@ -6,8 +6,6 @@ namespace ConsistentHashing
 {
     public interface IConsistentHashRing<TNode>
     {
-        void AddNode(TNode node);
-
         void AddNode(TNode node, IEnumerable<uint> virtualNodes);
 
         IEnumerable<(TNode, HashRange)> RangeAssignments { get; }
