@@ -39,6 +39,37 @@ namespace UnitTests
         }
 
         [Fact]
+        public void SingleNode()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            hashRing.AddNode(1, new uint[] { 100 });
+
+            hashRing.GetNode(10).Should().Be(1);
+            hashRing.GetNode(200).Should().Be(1);
+
+            var assignments = hashRing.RangeAssignments.ToArray();
+
+            assignments.Should().HaveCount(1);
+            (int node, HashRange range) = assignments[0];
+            node.Should().Be(1);
+            range.StartExclusive.Should().Be(100);
+            range.EndInclusive.Should().Be(100);
+        }
+
+        [Fact]
+        public void SingleNodeWithManyVirtualNodes()
+        {
+            IConsistentHashRing<int> hashRing = new HashRing<int>();
+
+            hashRing.AddNode(1, new uint[] { 100, 200, 300 });
+
+            hashRing.GetNode(10).Should().Be(1);
+            hashRing.GetNode(200).Should().Be(1);
+            hashRing.GetNode(500).Should().Be(1);
+        }
+
+        [Fact]
         public void GetRangeAssignments()
         {
             IConsistentHashRing<int> hashRing = new HashRing<int>();
