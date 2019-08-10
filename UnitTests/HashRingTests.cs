@@ -7,19 +7,30 @@ using Xunit.Abstractions;
 
 namespace UnitTests
 {
-    public class HashRingTests
+    public class BstHashRingTests : HashRingTestBase
     {
-        private readonly ITestOutputHelper output;
-
-        public HashRingTests(ITestOutputHelper output)
+        protected override IConsistentHashRing<int> CreateRing()
         {
-            this.output = output;
+            return new BstHashRing<int>();
         }
+    }
+
+    public class HashRingTests : HashRingTestBase
+    {
+        protected override IConsistentHashRing<int> CreateRing()
+        {
+            return new HashRing<int>();
+        }
+    }
+
+    public abstract class HashRingTestBase
+    {
+        protected abstract IConsistentHashRing<int> CreateRing();
 
         [Fact]
         public void AddRemoveNodes()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 10, 210, 310 });
             hashRing.AddNode(2, new uint[] { 20, 220, 320 });
@@ -41,7 +52,7 @@ namespace UnitTests
         [Fact]
         public void RemoveNonexistentNode()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.RemoveNode(1);
 
@@ -51,7 +62,7 @@ namespace UnitTests
         [Fact]
         public void GetNodeEmptyRing()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
             hashRing.IsEmpty.Should().BeTrue();
 
             Action action = () =>
@@ -65,7 +76,7 @@ namespace UnitTests
         [Fact]
         public void GetRangeAssignmentsEmptyRing()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             var assignments = hashRing.RangeAssignments.ToArray();
             assignments.Should().HaveCount(0);
@@ -74,7 +85,7 @@ namespace UnitTests
         [Fact]
         public void SingleNode()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 100 });
 
@@ -93,7 +104,7 @@ namespace UnitTests
         [Fact]
         public void SingleNodeWithManyVirtualNodes()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 100, 200, 300 });
 
@@ -105,7 +116,7 @@ namespace UnitTests
         [Fact]
         public void GetRangeAssignments()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
@@ -124,7 +135,7 @@ namespace UnitTests
         [Fact]
         public void GetNodeForHash()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
@@ -146,7 +157,7 @@ namespace UnitTests
         [Fact]
         public void VerifyAllHashesInRange()
         {
-            IConsistentHashRing<int> hashRing = new BstHashRing<int>();
+            IConsistentHashRing<int> hashRing = this.CreateRing();
 
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
