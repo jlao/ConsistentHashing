@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ConsistentHashing
 {
-    public class HashRing<TNode> : IConsistentHashRing<TNode>
+    public class BstHashRing<TNode> : IConsistentHashRing<TNode>
     {
         private TreeNode root;
 
-        public HashRing()
+        public BstHashRing()
         {
         }
 
