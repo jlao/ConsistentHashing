@@ -6,18 +6,20 @@
     /// <summary>
     /// Represents a consistent hash ring.
     /// </summary>
-    /// <typeparam name="TNode"></typeparam>
+    /// <typeparam name="TNode">The type of node to store in the ring.</typeparam>
     public interface IConsistentHashRing<TNode> : IEnumerable<(TNode, uint)>
         where TNode : IComparable<TNode>
     {
         /// <summary>
         /// Gets all partitions where a partition is a hash range and the owner node.
         /// </summary>
+        /// <value>An enumeration of all the partitions defined by the hash ring.</value>
         IEnumerable<Partition<TNode>> Partitions { get; }
 
         /// <summary>
         /// Gets whether the consistent hash ring is empty or not.
         /// </summary>
+        /// <value>True if the ring is empty and false otherwise.</value>
         bool IsEmpty { get; }
 
         /// <summary>
