@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsistentHashing
 {
-    public interface IConsistentHashRing<TNode>
+    public interface IConsistentHashRing<TNode> : IEnumerable<(TNode, uint)>
     {
         IEnumerable<(TNode, HashRange)> RangeAssignments { get; }
 

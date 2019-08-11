@@ -32,21 +32,87 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 10, 210, 310 });
             hashRing.AddNode(2, new uint[] { 20, 220, 320 });
+            hashRing.AddNode(1, new uint[] { 10, 210, 310 });
             hashRing.AddNode(3, new uint[] { 30, 230, 330 });
 
-            hashRing.GetNode(15).Should().Be(2);
-            hashRing.GetNode(215).Should().Be(2);
-            hashRing.GetNode(315).Should().Be(2);
+            var expected = new (int, uint)[]
+            {
+                (1, 10),
+                (2, 20),
+                (3, 30),
+
+                (1, 210),
+                (2, 220),
+                (3, 230),
+
+                (1, 310),
+                (2, 320),
+                (3, 330),
+            };
+
+            hashRing.ToList().Should().Equal(expected);
 
             hashRing.RemoveNode(2);
 
-            hashRing.GetNode(15).Should().Be(3);
+            expected = new (int, uint)[]
+            {
+                (1, 10),
+                (3, 30),
 
-            hashRing.GetNode(15).Should().Be(3);
-            hashRing.GetNode(215).Should().Be(3);
-            hashRing.GetNode(315).Should().Be(3);
+                (1, 210),
+                (3, 230),
+
+                (1, 310),
+                (3, 330),
+            };
+
+            hashRing.ToList().Should().Equal(expected);
+        }
+
+        [Fact]
+        public void AddNodesSameHash()
+        {
+            var hashRing = this.CreateRing();
+
+            hashRing.AddNode(2, new uint[] { 10, 20, 30 });
+            hashRing.AddNode(1, new uint[] { 10, 20, 30 });
+            hashRing.AddNode(3, new uint[] { 10, 20, 30 });
+
+            var expected = new (int, uint)[]
+            {
+                (1, 10),
+                (2, 10),
+                (3, 10),
+
+                (1, 20),
+                (2, 20),
+                (3, 20),
+
+                (1, 30),
+                (2, 30),
+                (3, 30),
+            };
+
+            hashRing.ToList().Should().Equal(expected);
+        }
+
+        [Fact]
+        public void GetNodeReturnsLowestNodeWhenSameHash()
+        {
+            var hashRing = this.CreateRing();
+
+            hashRing.AddNode(2, new uint[] { 10, 20, 30 });
+            hashRing.AddNode(1, new uint[] { 10, 20, 30 });
+            hashRing.AddNode(3, new uint[] { 10, 20, 30 });
+
+            hashRing.AddNode(4, new uint[] { 15, 25, 35 });
+
+            hashRing.GetNode(12).Should().Be(4);
+            hashRing.GetNode(16).Should().Be(1);
+            hashRing.GetNode(20).Should().Be(1);
+            hashRing.GetNode(27).Should().Be(1);
+            hashRing.GetNode(40).Should().Be(1);
         }
 
         [Fact]

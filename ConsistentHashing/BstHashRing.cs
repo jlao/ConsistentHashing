@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ConsistentHashing
@@ -196,6 +197,16 @@ namespace ConsistentHashing
                     throw new ArgumentException("Two nodes with same hash value");
                 }
             }
+        }
+
+        public IEnumerator<(TNode, uint)> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         private class TreeNode

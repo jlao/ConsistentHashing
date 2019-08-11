@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,6 +24,14 @@ namespace ConsistentHashing
                 {
                     ring.Insert(~index, newNode);
                 }
+            }
+        }
+
+        public IEnumerator<(T, uint)> GetEnumerator()
+        {
+            foreach (var item in this.ring)
+            {
+                yield return (item.Node, item.Hash);
             }
         }
 
@@ -95,7 +104,7 @@ namespace ConsistentHashing
                         }
                         else
                         {
-                            end = mid + 1;
+                            start = mid + 1;
                         }
                     }
                     else
@@ -103,8 +112,7 @@ namespace ConsistentHashing
                         return mid;
                     }
                 }
-
-                if (midHash > hash)
+                else if (midHash > hash)
                 {
                     end = mid - 1;
                 }
@@ -115,6 +123,11 @@ namespace ConsistentHashing
             }
 
             return ~start;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         private IEnumerable<(T, HashRange)> GetRangeAssignments()
