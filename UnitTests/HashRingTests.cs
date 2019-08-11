@@ -144,8 +144,8 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            var assignments = hashRing.RangeAssignments.ToArray();
-            assignments.Should().HaveCount(0);
+            var partitions = hashRing.Partitions.ToArray();
+            partitions.Should().HaveCount(0);
         }
 
         [Fact]
@@ -158,13 +158,13 @@ namespace UnitTests
             hashRing.GetNode(10).Should().Be(1);
             hashRing.GetNode(200).Should().Be(1);
 
-            var assignments = hashRing.RangeAssignments.ToArray();
+            var partitions = hashRing.Partitions.ToArray();
 
-            assignments.Should().HaveCount(1);
-            (int node, HashRange range) = assignments[0];
-            node.Should().Be(1);
-            range.StartExclusive.Should().Be(100);
-            range.EndInclusive.Should().Be(100);
+            partitions.Should().HaveCount(1);
+            Partition<int> partition = partitions[0];
+            partition.Node.Should().Be(1);
+            partition.Range.StartExclusive.Should().Be(100);
+            partition.Range.EndInclusive.Should().Be(100);
         }
 
         [Fact]
@@ -187,15 +187,15 @@ namespace UnitTests
             hashRing.AddNode(1, new uint[] { 100, 300, 500 });
             hashRing.AddNode(2, new uint[] { 200, 400, 600 });
 
-            (int node, HashRange range)[] assignments = hashRing.RangeAssignments.ToArray();
+            Partition<int>[] partitions = hashRing.Partitions.ToArray();
 
-            assignments.Should().HaveCount(6);
-            AssertAssignment(assignments[0], 2, 100, 200);
-            AssertAssignment(assignments[1], 1, 200, 300);
-            AssertAssignment(assignments[2], 2, 300, 400);
-            AssertAssignment(assignments[3], 1, 400, 500);
-            AssertAssignment(assignments[4], 2, 500, 600);
-            AssertAssignment(assignments[5], 1, 600, 100);
+            partitions.Should().HaveCount(6);
+            AssertPartition(partitions[0], 2, 100, 200);
+            AssertPartition(partitions[1], 1, 200, 300);
+            AssertPartition(partitions[2], 2, 300, 400);
+            AssertPartition(partitions[3], 1, 400, 500);
+            AssertPartition(partitions[4], 2, 500, 600);
+            AssertPartition(partitions[5], 1, 600, 100);
         }
 
         [Fact]
@@ -234,15 +234,15 @@ namespace UnitTests
             }
         }
 
-        private static void AssertAssignment(
-            (int node, HashRange range) assignment,
+        private static void AssertPartition(
+            Partition<int> partition,
             int expectedNode,
             uint expectedStart,
             uint expectedEnd)
         {
-            assignment.node.Should().Be(expectedNode);
-            assignment.range.StartExclusive.Should().Be(expectedStart);
-            assignment.range.EndInclusive.Should().Be(expectedEnd);
+            partition.Node.Should().Be(expectedNode);
+            partition.Range.StartExclusive.Should().Be(expectedStart);
+            partition.Range.EndInclusive.Should().Be(expectedEnd);
         }
     }
 }

@@ -5,14 +5,17 @@ using System.Text;
 
 namespace ConsistentHashing
 {
-    public struct RingAssignment
+    public struct Partition<T>
     {
-        public RingAssignment(IEnumerable<HashRange> ranges)
+        public Partition(T node, HashRange range)
         {
-            this.Ranges = ranges.ToList();
+            this.Node = node;
+            this.Range = range;
         }
 
-        public IReadOnlyList<HashRange> Ranges { get; }
+        public T Node { get; }
+
+        public HashRange Range { get; }
     }
 
     public struct HashRange

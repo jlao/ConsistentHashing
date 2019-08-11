@@ -12,7 +12,7 @@ namespace ConsistentHashing
         {
         }
 
-        public IEnumerable<(TNode, HashRange)> RangeAssignments =>
+        public IEnumerable<Partition<TNode>> Partitions =>
             EnumerateRangeAssignments(this.root);
 
         public bool IsEmpty => this.root == null;
@@ -80,7 +80,7 @@ namespace ConsistentHashing
             return root;
         }
 
-        private static IEnumerable<(TNode, HashRange)> EnumerateRangeAssignments(TreeNode root)
+        private static IEnumerable<Partition<TNode>> EnumerateRangeAssignments(TreeNode root)
         {
             if (root == null)
             {
@@ -89,7 +89,7 @@ namespace ConsistentHashing
 
             foreach ((TreeNode first, TreeNode second) in Pairs(InOrderTraversal(root)))
             {
-                yield return (second.Node, new HashRange(first.HashValue, second.HashValue));
+                yield return new Partition<TNode>(second.Node, new HashRange(first.HashValue, second.HashValue));
             }
         }
 

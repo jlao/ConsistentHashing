@@ -10,7 +10,7 @@ namespace ConsistentHashing
     {
         private readonly List<RingItem> ring = new List<RingItem>();
 
-        public IEnumerable<(T, HashRange)> RangeAssignments => this.GetRangeAssignments();
+        public IEnumerable<Partition<T>> Partitions => this.GetPartitions();
 
         public bool IsEmpty => this.ring.Count == 0;
 
@@ -130,7 +130,7 @@ namespace ConsistentHashing
             throw new NotImplementedException();
         }
 
-        private IEnumerable<(T, HashRange)> GetRangeAssignments()
+        private IEnumerable<Partition<T>> GetPartitions()
         {
             if (this.IsEmpty)
             {
@@ -143,12 +143,12 @@ namespace ConsistentHashing
             for (int i = 1; i < this.ring.Count; i++)
             {
                 var curr = this.ring[i];
-                yield return (curr.Node, new HashRange(prevHash, curr.Hash));
+                yield return new Partition<T>(curr.Node, new HashRange(prevHash, curr.Hash));
                 prevHash = curr.Hash;
             }
 
             var last = this.ring[this.ring.Count - 1];
-            yield return (first.Node, new HashRange(last.Hash, first.Hash));
+            yield return new Partition<T>(first.Node, new HashRange(last.Hash, first.Hash));
         }
 
         struct RingItem
