@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConsistentHashing
+﻿namespace ConsistentHashing
 {
-    public class HashRing<T> : IConsistentHashRing<T>
-        where T : IComparable<T>
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    public class HashRing<TNode> : IConsistentHashRing<TNode>
+        where TNode : IComparable<TNode>
     {
         private readonly List<RingItem> ring = new List<RingItem>();
 
-        public IEnumerable<Partition<T>> Partitions => this.GetPartitions();
+        public IEnumerable<Partition<TNode>> Partitions => this.GetPartitions();
 
         public bool IsEmpty => this.ring.Count == 0;
 
-        public void AddNode(T node, IEnumerable<uint> virtualNodes)
+        public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
         {
             foreach (uint virtualNode in virtualNodes)
             {
@@ -27,7 +26,7 @@ namespace ConsistentHashing
             }
         }
 
-        public IEnumerator<(T, uint)> GetEnumerator()
+        public IEnumerator<(TNode, uint)> GetEnumerator()
         {
             foreach (var item in this.ring)
             {
@@ -35,14 +34,14 @@ namespace ConsistentHashing
             }
         }
 
-        public T GetNode(uint hash)
+        public TNode GetNode(uint hash)
         {
             if (this.IsEmpty)
             {
                 throw new InvalidOperationException("Ring is empty");
             }
 
-            int index = this.BinarySearch(hash, false, default(T));
+            int index = this.BinarySearch(hash, false, default(TNode));
             
             if (index >= 0)
             {
@@ -69,7 +68,7 @@ namespace ConsistentHashing
             }
         }
 
-        public void RemoveNode(T node)
+        public void RemoveNode(TNode node)
         {
             bool RemovePredicate(RingItem n)
             {
@@ -79,7 +78,7 @@ namespace ConsistentHashing
             this.ring.RemoveAll(RemovePredicate);
         }
 
-        private int BinarySearch(uint hash, bool compareNodes, T node)
+        private int BinarySearch(uint hash, bool compareNodes, TNode node)
         {
             int start = 0;
             int end = ring.Count - 1;
@@ -130,7 +129,7 @@ namespace ConsistentHashing
             throw new NotImplementedException();
         }
 
-        private IEnumerable<Partition<T>> GetPartitions()
+        private IEnumerable<Partition<TNode>> GetPartitions()
         {
             if (this.IsEmpty)
             {
@@ -143,23 +142,23 @@ namespace ConsistentHashing
             for (int i = 1; i < this.ring.Count; i++)
             {
                 var curr = this.ring[i];
-                yield return new Partition<T>(curr.Node, new HashRange(prevHash, curr.Hash));
+                yield return new Partition<TNode>(curr.Node, new HashRange(prevHash, curr.Hash));
                 prevHash = curr.Hash;
             }
 
             var last = this.ring[this.ring.Count - 1];
-            yield return new Partition<T>(first.Node, new HashRange(last.Hash, first.Hash));
+            yield return new Partition<TNode>(first.Node, new HashRange(last.Hash, first.Hash));
         }
 
         struct RingItem
         {
-            public RingItem(T node, uint hash)
+            public RingItem(TNode node, uint hash)
             {
                 this.Node = node;
                 this.Hash = hash;
             }
 
-            public T Node { get; }
+            public TNode Node { get; }
 
             public uint Hash { get; }
 

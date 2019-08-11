@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace ConsistentHashing
 {
     public class BstHashRing<TNode> : IConsistentHashRing<TNode>
+        where TNode : IComparable<TNode>
     {
         private TreeNode root;
 
