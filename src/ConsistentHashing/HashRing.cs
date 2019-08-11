@@ -4,15 +4,19 @@
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <inheritdoc />
     public class HashRing<TNode> : IConsistentHashRing<TNode>
         where TNode : IComparable<TNode>
     {
         private readonly List<RingItem> ring = new List<RingItem>();
 
+        /// <inheritdoc />
         public IEnumerable<Partition<TNode>> Partitions => this.GetPartitions();
 
+        /// <inheritdoc />
         public bool IsEmpty => this.ring.Count == 0;
 
+        /// <inheritdoc />
         public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
         {
             foreach (uint virtualNode in virtualNodes)
@@ -26,6 +30,7 @@
             }
         }
 
+        /// <inheritdoc />
         public IEnumerator<(TNode, uint)> GetEnumerator()
         {
             foreach (var item in this.ring)
@@ -34,6 +39,7 @@
             }
         }
 
+        /// <inheritdoc />
         public TNode GetNode(uint hash)
         {
             if (this.IsEmpty)
@@ -68,6 +74,7 @@
             }
         }
 
+        /// <inheritdoc />
         public void RemoveNode(TNode node)
         {
             bool RemovePredicate(RingItem n)
