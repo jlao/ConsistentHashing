@@ -18,12 +18,9 @@ namespace ConsistentHashing
 
         public bool IsEmpty => this.root == null;
 
-        public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
+        public void AddNode(TNode node, uint point)
         {
-            foreach (uint virtualNode in virtualNodes)
-            {
-                AddNode(ref this.root, new TreeNode(node, virtualNode));
-            }
+            AddNode(ref this.root, new TreeNode(node, point));
         }
 
         public void RemoveNode(TNode node)

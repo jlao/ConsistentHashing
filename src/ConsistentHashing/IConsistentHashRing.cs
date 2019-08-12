@@ -23,14 +23,14 @@
         bool IsEmpty { get; }
 
         /// <summary>
-        /// Adds the specified node with virtual nodes.
+        /// Adds the specified node to the hash ring at the specified point.
         /// </summary>
         /// <param name="node">The node to add.</param>
-        /// <param name="virtualNodes">One or more points on the hash ring to add the node to.</param>
-        void AddNode(TNode node, IEnumerable<uint> virtualNodes);
+        /// <param name="point">The point at which to add the node to.</param>
+        void AddNode(TNode node, uint point);
 
         /// <summary>
-        /// Removes all virtual nodes for the specified node from the hash ring.
+        /// Removes all instances of the node from the hash ring.
         /// </summary>
         /// <param name="node">The node to remove.</param>
         void RemoveNode(TNode node);

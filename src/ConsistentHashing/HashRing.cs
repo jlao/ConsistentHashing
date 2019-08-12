@@ -17,16 +17,13 @@
         public bool IsEmpty => this.ring.Count == 0;
 
         /// <inheritdoc />
-        public void AddNode(TNode node, IEnumerable<uint> virtualNodes)
+        public void AddNode(TNode node, uint point)
         {
-            foreach (uint virtualNode in virtualNodes)
+            var newNode = new RingItem(node, point);
+            int index = this.BinarySearch(point, true, node);
+            if (index < 0)
             {
-                var newNode = new RingItem(node, virtualNode);
-                int index = this.BinarySearch(virtualNode, true, node);
-                if (index < 0)
-                {
-                    ring.Insert(~index, newNode);
-                }
+                ring.Insert(~index, newNode);
             }
         }
 

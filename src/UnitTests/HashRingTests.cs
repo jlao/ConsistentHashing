@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 
 namespace UnitTests
 {
+#if false
     public class BstHashRingTests : HashRingTestBase
     {
         protected override IConsistentHashRing<int> CreateRing()
@@ -14,6 +15,7 @@ namespace UnitTests
             return new BstHashRing<int>();
         }
     }
+#endif
 
     public class HashRingTests : HashRingTestBase
     {
@@ -32,9 +34,9 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(2, new uint[] { 20, 220, 320 });
-            hashRing.AddNode(1, new uint[] { 10, 210, 310 });
-            hashRing.AddNode(3, new uint[] { 30, 230, 330 });
+            hashRing.AddVirtualNodes(2, new uint[] { 20, 220, 320 });
+            hashRing.AddVirtualNodes(1, new uint[] { 10, 210, 310 });
+            hashRing.AddVirtualNodes(3, new uint[] { 30, 230, 330 });
 
             var expected = new (int, uint)[]
             {
@@ -71,13 +73,13 @@ namespace UnitTests
         }
 
         [Fact]
-        public void AddNodesSameHash()
+        public void AddVirtualNodessSameHash()
         {
             var hashRing = this.CreateRing();
 
-            hashRing.AddNode(2, new uint[] { 10, 20, 30 });
-            hashRing.AddNode(1, new uint[] { 10, 20, 30 });
-            hashRing.AddNode(3, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(2, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(1, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(3, new uint[] { 10, 20, 30 });
 
             var expected = new (int, uint)[]
             {
@@ -102,11 +104,11 @@ namespace UnitTests
         {
             var hashRing = this.CreateRing();
 
-            hashRing.AddNode(2, new uint[] { 10, 20, 30 });
-            hashRing.AddNode(1, new uint[] { 10, 20, 30 });
-            hashRing.AddNode(3, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(2, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(1, new uint[] { 10, 20, 30 });
+            hashRing.AddVirtualNodes(3, new uint[] { 10, 20, 30 });
 
-            hashRing.AddNode(4, new uint[] { 15, 25, 35 });
+            hashRing.AddVirtualNodes(4, new uint[] { 15, 25, 35 });
 
             hashRing.GetNode(12).Should().Be(4);
             hashRing.GetNode(16).Should().Be(1);
@@ -153,7 +155,7 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 100 });
+            hashRing.AddVirtualNodes(1, new uint[] { 100 });
 
             hashRing.GetNode(10).Should().Be(1);
             hashRing.GetNode(200).Should().Be(1);
@@ -172,7 +174,7 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 100, 200, 300 });
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 200, 300 });
 
             hashRing.GetNode(10).Should().Be(1);
             hashRing.GetNode(200).Should().Be(1);
@@ -184,8 +186,8 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 100, 300, 500 });
-            hashRing.AddNode(2, new uint[] { 200, 400, 600 });
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 300, 500 });
+            hashRing.AddVirtualNodes(2, new uint[] { 200, 400, 600 });
 
             Partition<int>[] partitions = hashRing.Partitions.ToArray();
 
@@ -203,8 +205,8 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 100, 300, 500 });
-            hashRing.AddNode(2, new uint[] { 200, 400, 600 });
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 300, 500 });
+            hashRing.AddVirtualNodes(2, new uint[] { 200, 400, 600 });
 
             hashRing.GetNode(101).Should().Be(2);
             hashRing.GetNode(200).Should().Be(2);
@@ -225,8 +227,8 @@ namespace UnitTests
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
 
-            hashRing.AddNode(1, new uint[] { 100, 300, 500 });
-            hashRing.AddNode(2, new uint[] { 200, 400, 600 });
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 300, 500 });
+            hashRing.AddVirtualNodes(2, new uint[] { 200, 400, 600 });
 
             for (uint i = 301; i <= 400; i++)
             {
