@@ -130,7 +130,7 @@
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return this.GetEnumerator();
         }
 
         private IEnumerable<Partition<TNode>> GetPartitions()

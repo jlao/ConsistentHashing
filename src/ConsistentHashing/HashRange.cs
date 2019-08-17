@@ -33,7 +33,17 @@
         /// <returns>True if the hash is in the range and false otherwise.</returns>
         public bool Contains(uint hash)
         {
+            if (this.StartExclusive > this.EndInclusive)
+            {
+                return hash > this.StartExclusive || hash <= this.EndInclusive;
+            }
+
             return hash > this.StartExclusive && hash <= this.EndInclusive;
+        }
+
+        public override string ToString()
+        {
+            return $"({this.StartExclusive}, {this.EndInclusive}]";
         }
     }
 }
