@@ -19,6 +19,10 @@ namespace UnitTests
 
     public class HashRingTests : HashRingTestBase
     {
+        public HashRingTests(ITestOutputHelper output) : base(output)
+        {
+        }
+
         protected override IConsistentHashRing<int> CreateRing()
         {
             return new HashRing<int>();
@@ -27,7 +31,38 @@ namespace UnitTests
 
     public abstract class HashRingTestBase
     {
+        private readonly ITestOutputHelper output;
+
         protected abstract IConsistentHashRing<int> CreateRing();
+
+        public HashRingTestBase(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+        [Fact]
+        public void GettingStartedSample()
+        {
+            var hashRing = new HashRing<string>();
+
+            hashRing.AddNode("a", 100);
+            hashRing.AddNode("b", 200);
+            hashRing.AddNode("a", 250);
+            hashRing.AddNode("c", 300);
+
+            Assert.Equal("a", hashRing.GetNode(0));
+            Assert.Equal("a", hashRing.GetNode(100));
+            Assert.Equal("a", hashRing.GetNode(500));
+            Assert.Equal("b", hashRing.GetNode(200));
+            Assert.Equal("a", hashRing.GetNode(225));
+            Assert.Equal("c", hashRing.GetNode(300));
+            Assert.Equal("a", hashRing.GetNode(400));
+
+            foreach (Partition<string> p in hashRing.Partitions)
+            {
+                this.output.WriteLine($"{p.Node}: ({p.Range.StartExclusive}, {p.Range.EndInclusive}]");
+            }
+        }
 
         [Fact]
         public void AddRemoveNodes()
