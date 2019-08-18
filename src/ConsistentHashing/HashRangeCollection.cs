@@ -3,6 +3,9 @@
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents a collection of non-overlapping hash ranges.
+    /// </summary>
     public class HashRangeCollection : IEnumerable<HashRange>
     {
         private readonly List<HashRange> collection;
@@ -19,6 +22,11 @@
             this.collection.TrimExcess();
         }
 
+        /// <summary>
+        /// Checks whether the specified hash falls within any range in the collection.
+        /// </summary>
+        /// <param name="hash">The hash to check.</param>
+        /// <returns>True if the hash is within a range in the collection and false otherwise.</returns>
         public bool Contains(uint hash)
         {
             int start = 0;
@@ -63,6 +71,10 @@
             return x.StartExclusive.CompareTo(y.StartExclusive);
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates over all the <see cref="HashRange"/>s in the collection.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
         public IEnumerator<HashRange> GetEnumerator()
         {
             return ((IEnumerable<HashRange>)collection).GetEnumerator();
