@@ -236,6 +236,25 @@ namespace UnitTests
             }
         }
 
+        [Fact]
+        public void GetRangesForNode()
+        {
+            IConsistentHashRing<int> hashRing = this.CreateRing();
+
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 300, 500 });
+            hashRing.AddVirtualNodes(2, new uint[] { 200, 400, 600 });
+
+            hashRing.GetRangesForNode(1).Should().BeEquivalentTo(
+                new HashRange(200, 300),
+                new HashRange(400, 500),
+                new HashRange(600, 100));
+
+            hashRing.GetRangesForNode(2).Should().BeEquivalentTo(
+                new HashRange(100, 200),
+                new HashRange(300, 400),
+                new HashRange(500, 600));
+        }
+
         private static void AssertPartition(
             Partition<int> partition,
             int expectedNode,

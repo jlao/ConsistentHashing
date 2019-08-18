@@ -1,8 +1,9 @@
 ﻿namespace ConsistentHashing
 {
+    using System.Collections;
     using System.Collections.Generic;
 
-    public class HashRangeCollection
+    public class HashRangeCollection : IEnumerable<HashRange>
     {
         private readonly List<HashRange> collection;
 
@@ -60,6 +61,16 @@
         private static int CompareByStartExclusive(HashRange x, HashRange y)
         {
             return x.StartExclusive.CompareTo(y.StartExclusive);
+        }
+
+        public IEnumerator<HashRange> GetEnumerator()
+        {
+            return ((IEnumerable<HashRange>)collection).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<HashRange>)collection).GetEnumerator();
         }
     }
 }
