@@ -4,19 +4,32 @@
     using System.Collections;
     using System.Collections.Generic;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Represents a consistent hash ring.
+    /// </summary>
+    /// <typeparam name="TNode">The type of node to store in the ring.</typeparam>
     public class HashRing<TNode> : IConsistentHashRing<TNode>
         where TNode : IComparable<TNode>
     {
         private readonly List<RingItem> ring = new List<RingItem>();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets all partitions where a partition is a hash range and the owner node.
+        /// </summary>
+        /// <value>An enumeration of all the partitions defined by the hash ring.</value>
         public IEnumerable<Partition<TNode>> Partitions => this.GetPartitions();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets whether the consistent hash ring is empty or not.
+        /// </summary>
+        /// <value>True if the ring is empty and false otherwise.</value>
         public bool IsEmpty => this.ring.Count == 0;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds the specified node to the hash ring at the specified point.
+        /// </summary>
+        /// <param name="node">The node to add.</param>
+        /// <param name="point">The point at which to add the node to.</param>
         public void AddNode(TNode node, uint point)
         {
             var newNode = new RingItem(node, point);
@@ -36,7 +49,11 @@
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the node that owns the hash.
+        /// </summary>
+        /// <param name="hash">The hash.</param>
+        /// <returns>The node that owns the hash.</returns>
         public TNode GetNode(uint hash)
         {
             if (this.IsEmpty)
@@ -71,7 +88,10 @@
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Removes all instances of the node from the hash ring.
+        /// </summary>
+        /// <param name="node">The node to remove.</param>
         public void RemoveNode(TNode node)
         {
             bool RemovePredicate(RingItem n)
