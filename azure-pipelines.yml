@@ -20,3 +20,8 @@ steps:
     command: test
     projects: 'src/UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+- script: dotnet pack src/ConsistentHashing/ConsistentHashing.csproj --output $(Build.ArtifactStagingDirectory)
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'nuget_package'
