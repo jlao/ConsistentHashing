@@ -16,12 +16,15 @@ steps:
 - script: dotnet build src/ConsistentHashing.sln --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: 'Run unit tests'
   inputs:
     command: test
     projects: 'src/UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - script: dotnet pack src/ConsistentHashing/ConsistentHashing.csproj --output $(Build.ArtifactStagingDirectory)
+  displayName: 'Create NuGet package'
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'nuget_package'
