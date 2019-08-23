@@ -15,3 +15,8 @@ variables:
 steps:
 - script: dotnet build src/ConsistentHashing.sln --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: 'src/UnitTests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
