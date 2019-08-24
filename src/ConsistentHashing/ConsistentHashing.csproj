@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>James Lao</Authors>
+    <Description>A consistent hashing implementation for .NET.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://jameslao.com/docs/consistent-hashing/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jlao/ConsistentHashing</RepositoryUrl>
+    <PackageTags>consistent-hashing;consistent-hash</PackageTags>
   </PropertyGroup>
 
 </Project>
