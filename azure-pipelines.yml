@@ -17,7 +17,8 @@ pool:
 variables:
   buildConfiguration: 'Release'
   majorMinorVersion: 1.0
-  semanticVersion: $[counter(variables['majorMinorVersion'], 0)]
+  counterPrefix: $[format('{0}-{1}', variables['majorMinorVersion'], variables['build.reason'])]
+  semanticVersion: $[counter(variables['counterPrefix'], 0)]
 
 steps:
 - script: dotnet build src/ConsistentHashing.sln --configuration $(buildConfiguration)
