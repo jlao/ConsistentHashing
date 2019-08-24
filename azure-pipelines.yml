@@ -32,6 +32,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Create NuGet package'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: pack
     configuration: $(buildConfiguration)
@@ -41,6 +42,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'nuget_package'
