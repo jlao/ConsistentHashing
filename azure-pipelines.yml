@@ -3,6 +3,8 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+name: $(majorMinorVersion).$(semanticVersion)
+
 trigger:
 - master
 
@@ -14,18 +16,29 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  majorMinorVersion: 1.0
+  semanticVersion: $[counter(variables['majorMinorVersion'], 0)]
 
 steps:
 - script: dotnet build src/ConsistentHashing.sln --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
 - task: DotNetCoreCLI@2
   displayName: 'Run unit tests'
   inputs:
     command: test
     projects: 'src/UnitTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-- script: dotnet pack src/ConsistentHashing/ConsistentHashing.csproj --output $(Build.ArtifactStagingDirectory)
+
+- task: DotNetCoreCLI@2
   displayName: 'Create NuGet package'
+  inputs:
+    command: pack
+    configuration: $(buildConfiguration)
+    packagesToPack: 'src/ConsistentHashing/ConsistentHashing.csproj'
+    packDirectory: $(Build.ArtifactStagingDirectory)
+    versioningScheme: byBuildNumber
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts'
   inputs:
