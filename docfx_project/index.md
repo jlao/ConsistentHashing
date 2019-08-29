@@ -1,8 +1,14 @@
 # ConsistentHashing
 
-This is an implementation of [consistent hashing](https://en.wikipedia.org/wiki/Consistent_hashing) for .NET.
+A .NET Standard 2.0 implementation of consistent hashing.
+
+GitHub repo: https://github.com/jlao/ConsistentHashing
 
 ## Getting Started
+
+Install the NuGet package:
+
+https://www.nuget.org/packages/ConsistentHashing/
 
 Add a using statement:
 
@@ -10,7 +16,7 @@ Add a using statement:
 using ConsistentHashing;
 ```
 
-The primary class is `HashRing<TNode>` which implements `IConsistentHashRing<TNode>`.
+The primary class is [`HashRing<TNode>`](xref:ConsistentHashing.HashRing`1) which implements [`IConsistentHashRing<TNode>`](xref:ConsistentHashing.IConsistentHashRing`1).
 We'll start by creating a hash ring and adding a few nodes. We use `string` for our
 node class, but it can be anything that implements `IComparable<TNode>`.
 
