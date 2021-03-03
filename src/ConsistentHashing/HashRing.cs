@@ -1,4 +1,6 @@
-﻿namespace ConsistentHashing
+﻿using System.Runtime.InteropServices;
+
+namespace ConsistentHashing
 {
     using System;
     using System.Collections;
@@ -61,32 +63,48 @@
                 throw new InvalidOperationException("Ring is empty");
             }
 
-            int index = this.BinarySearch(hash, false, default(TNode));
-            
-            if (index >= 0)
-            {
-                int prev = index - 1;
-                while (prev >= 0 && this.ring[prev].Hash == hash)
-                {
-                    index = prev;
-                    prev--;
-                }
+            int index = this.GetNodeIndex(hash);
 
-                return this.ring[index].Node;
-            }
-            else
-            {
-                index = ~index;
-                if (index == this.ring.Count)
-                {
-                    return this.ring[0].Node;
-                }
-                else
-                {
-                    return this.ring[index].Node;
-                }
-            }
+            return this.ring[index].Node;
         }
+
+
+        /// <summary>
+        /// Gets the node that owns the hash, and the next n - 1 nodes in the ring.
+        /// </summary>
+        /// <param name="hash">The hash.</param>
+        /// <param name="n">How many nodes to return.  May be less than n if n is greater than the number of nodes in the ring.</param>
+        /// <returns>The node that owns the hash.</returns>
+        public List<TNode> GetNodes(uint hash, int n)
+        {
+            if (this.IsEmpty)
+            {
+                throw new InvalidOperationException("Ring is empty");
+            }
+
+            if (n < 1)
+            {
+                throw new InvalidOperationException(
+                    $"GetNodes() parameter n must be greater or equal to 1, but it was {n}");
+            }
+
+            var nodes = new List<TNode>();
+
+            int curIndex = this.GetNodeIndex(hash);
+            n = Math.Min(n, ring.Count);
+            while (n-- > 0)
+            {
+                nodes.Add(ring[curIndex].Node);
+
+                if (++curIndex == ring.Count)
+                {
+                    curIndex = 0;
+                }
+            }
+
+            return nodes;
+        }
+
 
         /// <summary>
         /// Removes all instances of the node from the hash ring.
@@ -172,6 +190,31 @@
 
             var last = this.ring[this.ring.Count - 1];
             yield return new Partition<TNode>(first.Node, new HashRange(last.Hash, first.Hash));
+        }
+
+        private int GetNodeIndex(uint hash)
+        {
+            int index = this.BinarySearch(hash, false, default(TNode));
+            
+            if (index >= 0)
+            {
+                int prev = index - 1;
+                while (prev >= 0 && this.ring[prev].Hash == hash)
+                {
+                    index = prev;
+                    prev--;
+                }
+            }
+            else
+            {
+                index = ~index;
+                if (index == this.ring.Count)
+                {
+                    index = 0;
+                }
+            }
+
+            return index;
         }
 
         struct RingItem
