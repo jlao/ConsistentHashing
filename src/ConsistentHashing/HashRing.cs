@@ -70,7 +70,10 @@ namespace ConsistentHashing
 
 
         /// <summary>
-        /// Gets the node that owns the hash, and the next n - 1 nodes in the ring.
+        /// Gets the node that owns the hash, and the next n - 1 unique nodes
+        /// in the ring.  If a node appears on the ring multiple times as
+        /// virtual nodes, only a single instance will be be returned and count
+        /// toward the limit.
         /// </summary>
         /// <param name="hash">The hash.</param>
         /// <param name="n">How many nodes to return.  May be less than n if n is greater than the number of nodes in the ring.</param>
@@ -88,21 +91,45 @@ namespace ConsistentHashing
                     $"GetNodes() parameter n must be greater or equal to 1, but it was {n}");
             }
 
-            var nodes = new List<TNode>();
+            var toReturn = new List<TNode>();
+            var seen = new List<TNode>(); // Faster for small values of n, which is the expected use case.
 
             int curIndex = this.GetNodeIndex(hash);
             n = Math.Min(n, ring.Count);
-            while (n-- > 0)
+
+            // Loop over the ring, reading the hash's node and following nodes
+            for (int tries = 0; tries < ring.Count; tries++)
             {
-                nodes.Add(ring[curIndex].Node);
+                // We need to take the entry's ID.
+                var curNode = ring[curIndex].Node;
+                if (!seen.Contains(curNode))
+                {
+                    seen.Add(curNode);
+                    toReturn.Add(curNode);
+                    n--;
+                }
+                else
+                {
+                    // We've already seen curNode node and added it.  It's a
+                    // virtual node. Don't re-add it.
+                }
+
+                if (n == 0)
+                {
+                    // We've found all of the nodes the caller asked for.
+                    // Return.
+                    break;
+                }
 
                 if (++curIndex == ring.Count)
                 {
+                    // Wrap around.  We're a ring, aren't we?  Faster than
+                    // using modulo every loop.
                     curIndex = 0;
                 }
             }
 
-            return nodes;
+            return toReturn;
         }
 
 

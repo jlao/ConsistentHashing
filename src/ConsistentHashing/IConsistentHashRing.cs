@@ -41,5 +41,16 @@
         /// <param name="hash">The hash.</param>
         /// <returns>The node that owns the hash.</returns>
         TNode GetNode(uint hash);
+
+        /// <summary>
+        /// Gets the node that owns the hash, and the next n - 1 unique nodes
+        /// in the ring.  If a node appears on the ring multiple times as
+        /// virtual nodes, only a single instance will be be returned and count
+        /// toward the limit.
+        /// </summary>
+        /// <param name="hash">The hash.</param>
+        /// <param name="n">How many nodes to return.  May be less than n if n is greater than the number of nodes in the ring.</param>
+        /// <returns>The node that owns the hash.</returns>
+        List<TNode> GetNodes(uint hash, int n);
     }
 }

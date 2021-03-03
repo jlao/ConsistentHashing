@@ -258,6 +258,28 @@ namespace UnitTests
         }
 
         [Fact]
+        public void GetNodesForHash()
+        {
+            IConsistentHashRing<int> hashRing = this.CreateRing();
+
+            hashRing.AddVirtualNodes(1, new uint[] { 100, 300, 500 });
+            hashRing.AddVirtualNodes(2, new uint[] { 200, 400, 600 });
+
+            hashRing.GetNodes(101, 1).Should().Equal(new int[] {2});
+            hashRing.GetNodes(101, 2).Should().Equal(new int[] {2, 1});
+            hashRing.GetNodes(101, 3).Should().Equal(new int[] {2, 1});
+
+            hashRing.GetNodes(501, 1).Should().Equal(new int[] {2});
+            hashRing.GetNodes(501, 2).Should().Equal(new int[] {2, 1});
+            hashRing.GetNodes(501, 3).Should().Equal(new int[] {2, 1});
+
+            hashRing.GetNodes(601, 1).Should().Equal(new int[] {1});
+            hashRing.GetNodes(601, 2).Should().Equal(new int[] {1, 2});
+            hashRing.GetNodes(601, 3).Should().Equal(new int[] {1, 2});
+            hashRing.GetNodes(601, 100).Should().Equal(new int[] {1, 2});
+        }
+
+        [Fact]
         public void VerifyAllHashesInRange()
         {
             IConsistentHashRing<int> hashRing = this.CreateRing();
