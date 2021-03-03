@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace ConsistentHashing
+﻿namespace ConsistentHashing
 {
     using System;
     using System.Collections;
