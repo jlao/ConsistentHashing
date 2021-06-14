@@ -61,32 +61,78 @@
                 throw new InvalidOperationException("Ring is empty");
             }
 
-            int index = this.BinarySearch(hash, false, default(TNode));
-            
-            if (index >= 0)
-            {
-                int prev = index - 1;
-                while (prev >= 0 && this.ring[prev].Hash == hash)
-                {
-                    index = prev;
-                    prev--;
-                }
+            int index = this.GetNodeIndex(hash);
 
-                return this.ring[index].Node;
-            }
-            else
+            return this.ring[index].Node;
+        }
+
+
+        /// <summary>
+        /// Gets the node that owns the hash, and the next n - 1 unique nodes
+        /// on the ring.  This method is useful for implementing the concept of
+        /// replicas.
+        ///
+        /// If a node appears on the ring multiple times as virtual nodes, the
+        /// first instance will be returned and the remaining appearances will
+        /// be ignored. toward the limit.
+        /// </summary>
+        /// <param name="hash">The hash.</param>
+        /// <param name="n">How many nodes to return.  May be fewer than n if n is greater than the number of nodes in the ring.</param>
+        /// <returns>The nodes that owns the hash, and the following n - 1 nodes.</returns>
+        public List<TNode> GetNodes(uint hash, int n)
+        {
+            if (this.IsEmpty)
             {
-                index = ~index;
-                if (index == this.ring.Count)
+                throw new InvalidOperationException("Ring is empty");
+            }
+
+            if (n < 1)
+            {
+                throw new InvalidOperationException(
+                    $"GetNodes() parameter n must be greater or equal to 1, but it was {n}");
+            }
+
+            var toReturn = new List<TNode>();
+            var seen = new List<TNode>(); // Faster for small values of n, which is the expected use case.
+
+            int curIndex = this.GetNodeIndex(hash);
+            n = Math.Min(n, ring.Count);
+
+            // Loop over the ring, reading the hash's node and following nodes
+            for (int tries = 0; tries < ring.Count; tries++)
+            {
+                // We need to take the entry's ID.
+                var curNode = ring[curIndex].Node;
+                if (!seen.Contains(curNode))
                 {
-                    return this.ring[0].Node;
+                    seen.Add(curNode);
+                    toReturn.Add(curNode);
+                    n--;
                 }
                 else
                 {
-                    return this.ring[index].Node;
+                    // We've already seen curNode node and added it.  It's a
+                    // virtual node. Don't re-add it.
+                }
+
+                if (n == 0)
+                {
+                    // We've found all of the nodes the caller asked for.
+                    // Return.
+                    break;
+                }
+
+                if (++curIndex == ring.Count)
+                {
+                    // Wrap around.  We're a ring, aren't we?  Faster than
+                    // using modulo every loop.
+                    curIndex = 0;
                 }
             }
+
+            return toReturn;
         }
+
 
         /// <summary>
         /// Removes all instances of the node from the hash ring.
@@ -172,6 +218,31 @@
 
             var last = this.ring[this.ring.Count - 1];
             yield return new Partition<TNode>(first.Node, new HashRange(last.Hash, first.Hash));
+        }
+
+        private int GetNodeIndex(uint hash)
+        {
+            int index = this.BinarySearch(hash, false, default(TNode));
+            
+            if (index >= 0)
+            {
+                int prev = index - 1;
+                while (prev >= 0 && this.ring[prev].Hash == hash)
+                {
+                    index = prev;
+                    prev--;
+                }
+            }
+            else
+            {
+                index = ~index;
+                if (index == this.ring.Count)
+                {
+                    index = 0;
+                }
+            }
+
+            return index;
         }
 
         struct RingItem

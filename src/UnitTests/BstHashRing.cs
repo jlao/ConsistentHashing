@@ -207,6 +207,11 @@ namespace ConsistentHashing
             throw new NotImplementedException();
         }
 
+        public List<TNode> GetNodes(uint hash, int n)
+        {
+            throw new NotImplementedException();
+        }
+
         private class TreeNode
         {
             public TreeNode(TNode node, uint hashValue)
